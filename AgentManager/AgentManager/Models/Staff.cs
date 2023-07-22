@@ -12,7 +12,7 @@ namespace AgentManager.WebApp.Models
         public Department? Department{ get; set; }
         public int PositionId { get; set; }
         public Position? Position{ get; set; }
-        //public ICollection<DeliveryNote>? DeliveryNotes { get; set; }
-        //public ICollection<StaffRole>? StaffRoles { get; set; }
+        public ICollection<Receipt>? Receipts { get; set; }
+        public ICollection<DeliveryNote>? DeliveryNotes { get; set; }
     }
 }

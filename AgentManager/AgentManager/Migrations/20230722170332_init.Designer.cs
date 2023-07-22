@@ -12,18 +12,121 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AgentManager.Migrations
 {
     [DbContext(typeof(AgentManagerDbContext))]
-    [Migration("20230721042607_Initial")]
-    partial class Initial
+    [Migration("20230722170332_init")]
+    partial class init
     {
-        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.9")
+                .HasAnnotation("ProductVersion", "6.0.15")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+
+            modelBuilder.Entity("AgentManager.WebApp.Models.Agent", b =>
+                {
+                    b.Property<int>("AgentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AgentId"), 1L, 1);
+
+                    b.Property<string>("Address")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("AgentCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Agents")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("DistrictId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Phone")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("ReceivedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("AgentId");
+
+                    b.HasIndex("AgentCategoryId");
+
+                    b.HasIndex("DistrictId");
+
+                    b.ToTable("Agents");
+                });
+
+            modelBuilder.Entity("AgentManager.WebApp.Models.AgentCategory", b =>
+                {
+                    b.Property<int>("AgentCategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AgentCategoryId"), 1L, 1);
+
+                    b.Property<int>("MaxDebt")
+                        .HasColumnType("int");
+
+                    b.HasKey("AgentCategoryId");
+
+                    b.ToTable("AgentCategories");
+                });
+
+            modelBuilder.Entity("AgentManager.WebApp.Models.DeliveryNote", b =>
+                {
+                    b.Property<int>("DeliveryNoteId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DeliveryNoteId"), 1L, 1);
+
+                    b.Property<int>("AgentId")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("Payment")
+                        .HasColumnType("int");
+
+                    b.Property<string>("StaffId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("TotalPrice")
+                        .HasColumnType("int");
+
+                    b.HasKey("DeliveryNoteId");
+
+                    b.HasIndex("AgentId");
+
+                    b.HasIndex("StaffId");
+
+                    b.ToTable("DeliveryNotes");
+                });
+
+            modelBuilder.Entity("AgentManager.WebApp.Models.DeliveryNoteDetail", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("DeliveryNoteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Quantity")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductId", "DeliveryNoteId");
+
+                    b.HasIndex("DeliveryNoteId");
+
+                    b.ToTable("DeliveryNoteDetails");
+                });
 
             modelBuilder.Entity("AgentManager.WebApp.Models.Department", b =>
                 {
@@ -31,7 +134,7 @@ namespace AgentManager.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DepartmentId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DepartmentId"), 1L, 1);
 
                     b.Property<string>("DepartmentName")
                         .HasColumnType("nvarchar(max)");
@@ -41,13 +144,29 @@ namespace AgentManager.Migrations
                     b.ToTable("Departments");
                 });
 
+            modelBuilder.Entity("AgentManager.WebApp.Models.District", b =>
+                {
+                    b.Property<int>("DistrictID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DistrictID"), 1L, 1);
+
+                    b.Property<string>("DistrictName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("DistrictID");
+
+                    b.ToTable("Districts");
+                });
+
             modelBuilder.Entity("AgentManager.WebApp.Models.Position", b =>
                 {
                     b.Property<int>("PositionId")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PositionId"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PositionId"), 1L, 1);
 
                     b.Property<string>("PositionName")
                         .HasColumnType("nvarchar(max)");
@@ -55,6 +174,87 @@ namespace AgentManager.Migrations
                     b.HasKey("PositionId");
 
                     b.ToTable("Positions");
+                });
+
+            modelBuilder.Entity("AgentManager.WebApp.Models.Product", b =>
+                {
+                    b.Property<int>("ProductId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductId"), 1L, 1);
+
+                    b.Property<string>("Image")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("InventoryQuantity")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ItemUnit")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Price")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ProductCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ProductName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("ProductWeight")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductId");
+
+                    b.HasIndex("ProductCategoryId");
+
+                    b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("AgentManager.WebApp.Models.ProductCategory", b =>
+                {
+                    b.Property<int>("ProductCategoryId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductCategoryId"), 1L, 1);
+
+                    b.Property<string>("ProductCategoryName")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("ProductCategoryId");
+
+                    b.ToTable("ProductCategories");
+                });
+
+            modelBuilder.Entity("AgentManager.WebApp.Models.Receipt", b =>
+                {
+                    b.Property<int>("ReceiptId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ReceiptId"), 1L, 1);
+
+                    b.Property<int>("AgentId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Cash")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("StaffId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("ReceiptId");
+
+                    b.HasIndex("AgentId");
+
+                    b.HasIndex("StaffId");
+
+                    b.ToTable("Receipts");
                 });
 
             modelBuilder.Entity("AgentManager.WebApp.Models.Staff", b =>
@@ -177,7 +377,7 @@ namespace AgentManager.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -202,7 +402,7 @@ namespace AgentManager.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
                     b.Property<string>("ClaimType")
                         .HasColumnType("nvarchar(max)");
@@ -277,6 +477,89 @@ namespace AgentManager.Migrations
                     b.ToTable("UserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("AgentManager.WebApp.Models.Agent", b =>
+                {
+                    b.HasOne("AgentManager.WebApp.Models.AgentCategory", "AgentCategory")
+                        .WithMany("Agents")
+                        .HasForeignKey("AgentCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AgentManager.WebApp.Models.District", "District")
+                        .WithMany("Agents")
+                        .HasForeignKey("DistrictId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AgentCategory");
+
+                    b.Navigation("District");
+                });
+
+            modelBuilder.Entity("AgentManager.WebApp.Models.DeliveryNote", b =>
+                {
+                    b.HasOne("AgentManager.WebApp.Models.Agent", "Agent")
+                        .WithMany("DeliveryNotes")
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AgentManager.WebApp.Models.Staff", "Staff")
+                        .WithMany("DeliveryNotes")
+                        .HasForeignKey("StaffId");
+
+                    b.Navigation("Agent");
+
+                    b.Navigation("Staff");
+                });
+
+            modelBuilder.Entity("AgentManager.WebApp.Models.DeliveryNoteDetail", b =>
+                {
+                    b.HasOne("AgentManager.WebApp.Models.DeliveryNote", "DeliveryNote")
+                        .WithMany("DeliveryNoteDetails")
+                        .HasForeignKey("DeliveryNoteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AgentManager.WebApp.Models.Product", "Product")
+                        .WithMany("DeliveryNoteDetails")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("DeliveryNote");
+
+                    b.Navigation("Product");
+                });
+
+            modelBuilder.Entity("AgentManager.WebApp.Models.Product", b =>
+                {
+                    b.HasOne("AgentManager.WebApp.Models.ProductCategory", "ProductCategory")
+                        .WithMany("Products")
+                        .HasForeignKey("ProductCategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ProductCategory");
+                });
+
+            modelBuilder.Entity("AgentManager.WebApp.Models.Receipt", b =>
+                {
+                    b.HasOne("AgentManager.WebApp.Models.Agent", "Agent")
+                        .WithMany("Receipts")
+                        .HasForeignKey("AgentId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("AgentManager.WebApp.Models.Staff", "Staff")
+                        .WithMany("Receipts")
+                        .HasForeignKey("StaffId");
+
+                    b.Navigation("Agent");
+
+                    b.Navigation("Staff");
+                });
+
             modelBuilder.Entity("AgentManager.WebApp.Models.Staff", b =>
                 {
                     b.HasOne("AgentManager.WebApp.Models.Department", "Department")
@@ -347,14 +630,53 @@ namespace AgentManager.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("AgentManager.WebApp.Models.Agent", b =>
+                {
+                    b.Navigation("DeliveryNotes");
+
+                    b.Navigation("Receipts");
+                });
+
+            modelBuilder.Entity("AgentManager.WebApp.Models.AgentCategory", b =>
+                {
+                    b.Navigation("Agents");
+                });
+
+            modelBuilder.Entity("AgentManager.WebApp.Models.DeliveryNote", b =>
+                {
+                    b.Navigation("DeliveryNoteDetails");
+                });
+
             modelBuilder.Entity("AgentManager.WebApp.Models.Department", b =>
                 {
                     b.Navigation("Staffs");
                 });
 
+            modelBuilder.Entity("AgentManager.WebApp.Models.District", b =>
+                {
+                    b.Navigation("Agents");
+                });
+
             modelBuilder.Entity("AgentManager.WebApp.Models.Position", b =>
                 {
                     b.Navigation("Staffs");
+                });
+
+            modelBuilder.Entity("AgentManager.WebApp.Models.Product", b =>
+                {
+                    b.Navigation("DeliveryNoteDetails");
+                });
+
+            modelBuilder.Entity("AgentManager.WebApp.Models.ProductCategory", b =>
+                {
+                    b.Navigation("Products");
+                });
+
+            modelBuilder.Entity("AgentManager.WebApp.Models.Staff", b =>
+                {
+                    b.Navigation("DeliveryNotes");
+
+                    b.Navigation("Receipts");
                 });
 #pragma warning restore 612, 618
         }

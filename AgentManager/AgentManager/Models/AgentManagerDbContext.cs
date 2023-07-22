@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using System.Data;
 
 namespace AgentManager.WebApp.Models
 {
@@ -14,15 +15,23 @@ namespace AgentManager.WebApp.Models
         {
             //Tao khoa cho cac bang cua Identity
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<DeliveryNoteDetail>().HasKey(x => new { x.ProductId, x.DeliveryNoteId});
+
 
             //Sua ten cac bang cua Identity
             FixNameIdentityTables(modelBuilder);
         }
-        DbSet<Department> Departments { get; set; }
-        DbSet<Position> Positions { get; set; }
-        DbSet<Staff> Staffs { get; set; }
-
-
+        DbSet<Agent>? Agents { get; set; }
+        DbSet<AgentCategory>? AgentCategories { get; set; }
+        DbSet<DeliveryNote>? DeliveryNotes { get; set; }
+        DbSet<DeliveryNoteDetail>? DeliveryNoteDetails { get; set; }
+        DbSet<Department>? Departments { get; set; }
+        DbSet<District>? Districts { get; set; }
+        DbSet<Position>? Positions { get; set; }
+        DbSet<Product>? Products { get; set; }
+        DbSet<ProductCategory>? ProductCategories { get; set; }
+        DbSet<Receipt>? Receipts { get; set; }
+        DbSet<Staff>? Staffs { get; set; }
 
 
 
