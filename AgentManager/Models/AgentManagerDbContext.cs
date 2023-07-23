@@ -40,7 +40,7 @@ namespace AgentManager.WebApp.Models
         {
             foreach (var entityType in modelBuilder.Model.GetEntityTypes())
             {
-                var tablename = entityType.GetTableName();
+                var tablename = entityType.GetTableName() + "";
                 if (tablename.StartsWith("AspNet"))
                 {
                     entityType.SetTableName(tablename.Substring(6));
