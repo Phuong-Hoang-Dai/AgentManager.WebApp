@@ -94,10 +94,10 @@ namespace AgentManager.Migrations
                 {
                     AgentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    Agents = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AgentName = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ReceivedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ReceptionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DistrictId = table.Column<int>(type: "int", nullable: false),
                     AgentCategoryId = table.Column<int>(type: "int", nullable: false)
                 },

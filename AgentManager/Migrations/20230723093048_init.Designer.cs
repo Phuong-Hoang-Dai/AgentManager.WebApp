@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AgentManager.Migrations
 {
     [DbContext(typeof(AgentManagerDbContext))]
-    [Migration("20230722170332_init")]
+    [Migration("20230723093048_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -38,7 +38,7 @@ namespace AgentManager.Migrations
                     b.Property<int>("AgentCategoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Agents")
+                    b.Property<string>("AgentName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DistrictId")
@@ -47,7 +47,7 @@ namespace AgentManager.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ReceivedDate")
+                    b.Property<DateTime>("ReceptionDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("AgentId");

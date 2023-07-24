@@ -21,17 +21,17 @@ namespace AgentManager.WebApp.Models
             //Sua ten cac bang cua Identity
             FixNameIdentityTables(modelBuilder);
         }
-        DbSet<Agent>? Agents { get; set; }
-        DbSet<AgentCategory>? AgentCategories { get; set; }
-        DbSet<DeliveryNote>? DeliveryNotes { get; set; }
-        DbSet<DeliveryNoteDetail>? DeliveryNoteDetails { get; set; }
-        DbSet<Department>? Departments { get; set; }
-        DbSet<District>? Districts { get; set; }
-        DbSet<Position>? Positions { get; set; }
-        DbSet<Product>? Products { get; set; }
-        DbSet<ProductCategory>? ProductCategories { get; set; }
-        DbSet<Receipt>? Receipts { get; set; }
-        DbSet<Staff>? Staffs { get; set; }
+        public DbSet<Agent>? Agents { get; set; }
+        public DbSet<AgentCategory>? AgentCategories { get; set; }
+        public DbSet<DeliveryNote>? DeliveryNotes { get; set; }
+        public DbSet<DeliveryNoteDetail>? DeliveryNoteDetails { get; set; }
+        public DbSet<Department>? Departments { get; set; }
+        public DbSet<District>? Districts { get; set; }
+        public DbSet<Position>? Positions { get; set; }
+        public DbSet<Product>? Products { get; set; }
+        public DbSet<ProductCategory>? ProductCategories { get; set; }
+        public DbSet<Receipt>? Receipts { get; set; }
+        public DbSet<Staff>? Staffs { get; set; }
 
 
 

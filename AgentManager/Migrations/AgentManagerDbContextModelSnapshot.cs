@@ -36,7 +36,7 @@ namespace AgentManager.Migrations
                     b.Property<int>("AgentCategoryId")
                         .HasColumnType("int");
 
-                    b.Property<string>("Agents")
+                    b.Property<string>("AgentName")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("DistrictId")
@@ -45,7 +45,7 @@ namespace AgentManager.Migrations
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<DateTime>("ReceivedDate")
+                    b.Property<DateTime>("ReceptionDate")
                         .HasColumnType("datetime2");
 
                     b.HasKey("AgentId");
