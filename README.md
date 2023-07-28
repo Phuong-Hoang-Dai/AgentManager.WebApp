@@ -12,7 +12,7 @@ dotnet add package Microsoft.VisualStudio.Web.CodeGeneration --version 6.0.15
 
 dotnet add package Microsoft.VisualStudio.Web.CodeGeneration.Design --version 6.0.15
 
-dotnet add package Microsoft.EntityFrameworkCore.Tools --version 6.0.20\n
+dotnet add package Microsoft.EntityFrameworkCore.Tools --version 6.0.20
 
 dotnet add package Microsoft.AspNetCore.Identity.EntityFrameworkCore --version 6.0.20
 
