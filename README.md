@@ -1,4 +1,5 @@
 //Cài công cụ EF và package
+
 dotnet tool install --global dotnet-ef
 
 dotnet add package Microsoft.EntityFrameworkCore --version 6.0.20
