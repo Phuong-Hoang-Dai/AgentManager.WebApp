@@ -28,7 +28,6 @@ namespace AgentManager.WebApp.Models
                     context.SaveChanges();
                 }
 
-
                 if (!context.Districts.Any())
                 {
                     context.AddRange(
@@ -80,6 +79,36 @@ namespace AgentManager.WebApp.Models
                     {
                         DistrictName = "Quan 12"
                     });
+                    context.SaveChanges();
+                }
+
+                if (!context.Positions.Any())
+                {
+                    context.AddRange(
+                    new Position
+                    {
+                        PositionName = "Nhân viên"
+                    },
+                    new Position
+                    {
+                        PositionName = "Trưởng phòng"
+                    }
+                    );
+                    context.SaveChanges();
+                }
+
+                if (!context.Departments.Any())
+                {
+                    context.AddRange(
+                    new Department
+                    {
+                        DepartmentName = "Quản lý sản phẩm"
+                    },
+                    new Department
+                    {
+                        DepartmentName = "Quản lý đại lý"
+                    }
+                    );
                     context.SaveChanges();
                 }
 
@@ -187,7 +216,33 @@ namespace AgentManager.WebApp.Models
                     });
                     context.SaveChanges();
                 }
-
+                Random r = new Random();
+                if (!context.Staffs.Any())
+                {
+                    for(int i= 0; i < 20; i++)
+                    {
+                        context.AddRange(
+                        new Staff
+                        {
+                            Id = Guid.NewGuid().ToString(),
+                            UserName = $"email{i.ToString("D3")}@example",
+                            Email = $"email{i.ToString("D3")}@example",
+                            SecurityStamp = Guid.NewGuid().ToString(),
+                            EmailConfirmed = true,
+                            PhoneNumberConfirmed = false,
+                            TwoFactorEnabled = false,
+                            LockoutEnabled = false,
+                            AccessFailedCount = 0,
+                            PositionId = r.Next(1,3),
+                            DepartmentId = r.Next(1,3),
+                            StaffName = "Staff-" + i.ToString("D3"),
+                            Gender = "Nam",
+                            DoB = new DateTime(r.Next(1990,2000),r.Next(1,12), r.Next(1, 30)),
+                            Address = "....@#____"
+                        });
+                    }
+                    context.SaveChanges();
+                }
             }
         }
     }

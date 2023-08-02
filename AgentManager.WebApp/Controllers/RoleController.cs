@@ -93,27 +93,6 @@ namespace AgentManager.WebApp.Controllers
         // GET: Agent/Delete/5
         public async Task<IActionResult> Delete(string? id)
         {
-            //if (id == null || _context.Agents == null)
-            //{
-            //    return NotFound();
-            //}
-
-            //var agent = await _context.Agents
-            //    .Include(a => a.AgentCategory)
-            //    .Include(a => a.District)
-            //    .FirstOrDefaultAsync(m => m.AgentId == id);
-            //if (agent == null)
-            //{
-            //    return NotFound();
-            //}
-            //return View(agent);
-
-
-            if (id == null)
-            {
-                return NotFound();
-            }
-
             var role = await _roleManager.FindByIdAsync(id);
 
             if (role == null)
@@ -146,19 +125,6 @@ namespace AgentManager.WebApp.Controllers
             await _roleManager.DeleteAsync(role);
 
             return RedirectToAction(nameof(Index));
-
-            //if (_context.Agents == null)
-            //{
-            //    return Problem("Data is null.");
-            //}
-            //var agent = await _context.Agents.FindAsync(id);
-            //if (agent != null)
-            //{
-            //    _context.Agents.Remove(agent);
-            //}
-
-            //await _context.SaveChangesAsync();
-            //return RedirectToAction(nameof(Index));
         }
     }
 }
