@@ -15,11 +15,6 @@ namespace AgentManager.WebApp.Controllers
         private readonly AgentManagerDbContext _context;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        [BindProperty]
-        [DisplayName("Danh sách các quyền")]
-        public string[] roles { get; set; }
-        public SelectList allRoles { get; set; }
-
 
         public AccountController(AgentManagerDbContext context, UserManager<Staff>? userManager, RoleManager<IdentityRole> roleManager)
         {
@@ -78,26 +73,37 @@ namespace AgentManager.WebApp.Controllers
                 return NotFound();
             }
 
-            roles = (await _userManager.GetRolesAsync(s)).ToArray();
-            List<string> rolesList = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
-            allRoles = new SelectList(rolesList);
+            AddRoleVM vm = new AddRoleVM();
 
-            return View();
+            vm.roles = (await _userManager.GetRolesAsync(s)).ToArray();
+            List<string> rolesList = await _roleManager.Roles.Select(r => r.Name).ToListAsync();
+            vm.allRoles = new SelectList(rolesList);
+            return View(vm);
         }
 
         [HttpPost, ActionName("AddRole")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddRoles(string id)
+        public async Task<IActionResult> AddRoles(string id, AddRoleVM vm)
         {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
             var s = await _userManager.FindByIdAsync(id);
 
             if (s == null)
             {
                 return NotFound();
             }
-            // await _userManager.RemovePasswordAsync(s);
-            var result = await _userManager.AddPasswordAsync(s, "123456"); //$"{s.DoB.Day}{s.DoB.Month}{s.DoB.Year}");
-            Console.WriteLine(s.PasswordHash + result);
+
+            var oldRole = (await _userManager.GetRolesAsync(s)).ToArray();
+            var deleteRole = oldRole.Where(r => !vm.roles.Contains(r));
+            var newRole = vm.roles.Where(_ => !oldRole.Contains(_));
+
+            await _userManager.RemoveFromRolesAsync(s, deleteRole);
+            await _userManager.AddToRolesAsync(s, newRole);
+
             return RedirectToAction(nameof(Index));
         }
         // GET: AccountController/Delete/5
