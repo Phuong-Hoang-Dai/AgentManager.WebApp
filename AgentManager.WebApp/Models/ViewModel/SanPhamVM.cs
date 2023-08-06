@@ -1,6 +1,7 @@
-﻿namespace Theory_Class_Project.Models
+﻿
+namespace AgentManager.WebApp.Models.ViewModel
 {
-    public class SanPhamVM
+	public class SanPhamVM
     {
         public int maSanPham { get; set; }
 

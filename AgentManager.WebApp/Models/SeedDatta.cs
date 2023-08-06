@@ -104,7 +104,23 @@ namespace AgentManager.WebApp.Models
                     {
                         DepartmentName = "Quản lý sản phẩm"
                     },
-                    new Department
+					new Department
+					{
+						DepartmentName = "Quản lý nhân viên"
+					},
+					new Department
+					{
+						DepartmentName = "Quản lý Đơn hàng"
+					},
+					new Department
+					{
+						DepartmentName = "Quản lý báo cáo tài chính"
+					},
+					new Department
+					{
+						DepartmentName = "Quản lý trị hệ thống"
+					},
+					new Department
                     {
                         DepartmentName = "Quản lý đại lý"
                     }
@@ -219,7 +235,7 @@ namespace AgentManager.WebApp.Models
                 Random r = new Random();
                 if (!context.Staffs.Any())
                 {
-                    for(int i= 0; i < 20; i++)
+                    for(int i= 0; i < 10; i++)
                     {
                         context.AddRange(
                         new Staff

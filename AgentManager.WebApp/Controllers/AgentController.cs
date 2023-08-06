@@ -6,10 +6,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AgentManager.WebApp.Models.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AgentManager.WebApp.Controllers
 {
-    [Authorize(Roles = "Quản lý đại lý")]
 	public class AgentController : Controller
     {
         private readonly AgentManagerDbContext _context;

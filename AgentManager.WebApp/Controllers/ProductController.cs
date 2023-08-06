@@ -2,9 +2,9 @@
 using Microsoft.AspNetCore.Mvc;
 using AgentManager.WebApp.Models;
 using AgentManager.WebApp.Models.Data;
-using Theory_Class_Project.Models;
+using AgentManager.WebApp.Models.ViewModel;
 
-namespace Theory_Class_Project.Controllers
+namespace AgentManager.WebApp.Controllers
 {
     public class ProductController : Controller
     {

@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AgentManager.WebApp.Controllers
 {
-    [Authorize(Roles = "Quản lý đại lý")]
 	public class DeliveryNoteDetailsController : Controller
     {
         private readonly AgentManagerDbContext _context;

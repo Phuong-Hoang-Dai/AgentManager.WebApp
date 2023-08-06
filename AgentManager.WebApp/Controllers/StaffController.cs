@@ -1,4 +1,5 @@
 ﻿using AgentManager.WebApp.Models.Data;
+using AgentManager.WebApp.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -47,8 +48,7 @@ namespace AgentManager.WebApp.Controllers
         {
             ViewData["PositionId"] = new SelectList(_context.Positions, "PositionId", "PositionName");
             ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentName");
-
-            SelectListItem[] gender = new SelectListItem[2] { new SelectListItem("Nam", "Nam"), new SelectListItem("Nữ", "Nữ") };
+            var gender = new List<string> { "Nam", "Nữ" };
             ViewData["Gender"] = new SelectList(gender);
             return View();
         }
@@ -58,7 +58,7 @@ namespace AgentManager.WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("StaffName,Gender,DoB,Address,DepartmentId,PositionId")] Staff staff)
+        public async Task<IActionResult> Create(StaffVM staff)
         {
             if (ModelState.IsValid)
             {
@@ -70,10 +70,10 @@ namespace AgentManager.WebApp.Controllers
                 newStaff.Address = staff.Address;
                 newStaff.DepartmentId = staff.DepartmentId;
                 newStaff.PositionId = staff.PositionId;
-                newStaff.Email = newStaff.Email;
+                newStaff.Email = staff.Email;
 
                 newStaff.Id = Guid.NewGuid().ToString();
-                newStaff.UserName = newStaff.Email;
+                newStaff.UserName = staff.Email;
                 newStaff.SecurityStamp = Guid.NewGuid().ToString();
                 newStaff.EmailConfirmed = true;
                 newStaff.PhoneNumberConfirmed = false;
@@ -81,13 +81,15 @@ namespace AgentManager.WebApp.Controllers
                 newStaff.LockoutEnabled = false;
                 newStaff.AccessFailedCount = 0;
 
-                _context.Add(staff);
+                _context.Add(newStaff);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["PositionId"] = new SelectList(_context.Positions, "PositionId", "PositionName");
             ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentName");
-            return View(staff);
+			var gender = new List<string> { "Nam", "Nữ" };
+			ViewData["Gender"] = new SelectList(gender);
+			return View(staff);
         }
 
         // GET: Agent/Edit/5

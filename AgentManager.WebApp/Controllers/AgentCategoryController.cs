@@ -10,8 +10,6 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AgentManager.WebApp.Controllers
 {
-    [Authorize(Roles = "Trưởng phòng")]
-    [Authorize(Roles = "Quản lý đại lý")]
 	public class AgentCategoryController : Controller
     {
         private readonly AgentManagerDbContext _context;
