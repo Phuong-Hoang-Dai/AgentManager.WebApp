@@ -1,20 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using AgentManager.WebApp.Models.Data;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using AgentManager.WebApp.Models.Data;
+using System.Security;
 
 namespace AgentManager.WebApp.Controllers
 {
-    [Authorize(Roles = "Quản lý đại lý")]
-	public class AgentController : Controller
+    public class StaffController : Controller
     {
         private readonly AgentManagerDbContext _context;
 
-        public AgentController(AgentManagerDbContext context)
+        public StaffController(AgentManagerDbContext context)
         {
             _context = context;
         }
@@ -22,35 +18,38 @@ namespace AgentManager.WebApp.Controllers
         // GET: Agent
         public async Task<IActionResult> Index()
         {
-            var agentManagerDbContext = _context.Agents.Include(a => a.AgentCategory).Include(a => a.District);
+            var agentManagerDbContext = _context.Staffs.Include(a => a.Position).Include(a => a.Department);
             return View(await agentManagerDbContext.ToListAsync());
         }
 
         // GET: Agent/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(string? id)
         {
-            if (id == null || _context.Agents == null)
+            if (id == null || _context.Staffs == null)
             {
                 return NotFound();
             }
 
-            var agent = await _context.Agents
-                .Include(a => a.AgentCategory)
-                .Include(a => a.District)
-                .FirstOrDefaultAsync(m => m.AgentId == id);
-            if (agent == null)
+            var staff = await _context.Staffs
+                .Include(a => a.Position)
+                .Include(a => a.Department)
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (staff == null)
             {
                 return NotFound();
             }
 
-            return View(agent);
+            return View(staff);
         }
 
         // GET: Agent/Create
         public IActionResult Create()
         {
-            ViewData["AgentCategoryId"] = new SelectList(_context.AgentCategories, "AgentCategoryId", "MaxDebt");
-            ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictID", "DistrictName");
+            ViewData["PositionId"] = new SelectList(_context.Positions, "PositionId", "PositionName");
+            ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentName");
+
+            SelectListItem[] gender = new SelectListItem[2] { new SelectListItem("Nam", "Nam"), new SelectListItem("Nữ", "Nữ") };
+            ViewData["Gender"] = new SelectList(gender);
             return View();
         }
 
@@ -59,18 +58,36 @@ namespace AgentManager.WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("AgentId,AgentName,Address,Phone,ReceptionDate,DistrictId,AgentCategoryId")] Agent agent)
+        public async Task<IActionResult> Create([Bind("StaffName,Gender,DoB,Address,DepartmentId,PositionId")] Staff staff)
         {
             if (ModelState.IsValid)
             {
-                agent.ReceptionDate = DateTime.Now;
-                _context.Add(agent);
+                Staff newStaff = new Staff();
+
+                newStaff.StaffName = staff.StaffName;
+                newStaff.Gender = staff.Gender;
+                newStaff.DoB = staff.DoB;
+                newStaff.Address = staff.Address;
+                newStaff.DepartmentId = staff.DepartmentId;
+                newStaff.PositionId = staff.PositionId;
+                newStaff.Email = newStaff.Email;
+
+                newStaff.Id = Guid.NewGuid().ToString();
+                newStaff.UserName = newStaff.Email;
+                newStaff.SecurityStamp = Guid.NewGuid().ToString();
+                newStaff.EmailConfirmed = true;
+                newStaff.PhoneNumberConfirmed = false;
+                newStaff.TwoFactorEnabled = false;
+                newStaff.LockoutEnabled = false;
+                newStaff.AccessFailedCount = 0;
+
+                _context.Add(staff);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AgentCategoryId"] = new SelectList(_context.AgentCategories, "AgentCategoryId", "MaxDebt");
-            ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictID", "DistrictName");
-            return View(agent);
+            ViewData["PositionId"] = new SelectList(_context.Positions, "PositionId", "PositionName");
+            ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentName");
+            return View(staff);
         }
 
         // GET: Agent/Edit/5
@@ -86,9 +103,9 @@ namespace AgentManager.WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["AgentCategoryId"] = new SelectList(_context.AgentCategories, "AgentCategoryId", "MaxDebt");
-            ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictID", "DistrictName");
-            return View(agent);
+            ViewData["PositionId"] = new SelectList(_context.Positions, "PositionId", "PositionName");
+            ViewData["DepartmentId"] = new SelectList(_context.Departments, "DepartmentId", "DepartmentName");
+            return View();
         }
 
         // POST: Agent/Edit/5
@@ -162,14 +179,14 @@ namespace AgentManager.WebApp.Controllers
             {
                 _context.Agents.Remove(agent);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool AgentExists(int id)
         {
-          return (_context.Agents?.Any(e => e.AgentId == id)).GetValueOrDefault();
+            return (_context.Agents?.Any(e => e.AgentId == id)).GetValueOrDefault();
         }
     }
 }

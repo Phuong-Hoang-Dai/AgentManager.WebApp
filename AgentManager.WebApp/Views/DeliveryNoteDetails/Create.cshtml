@@ -33,7 +33,7 @@
         <div class="col-12">
             <a asp-action="Index" asp-controller="DeliveryNotes" class="btn btn-secondary">Cancel</a>
             <input type="submit" value="Thêm sản phẩm" class="btn btn-success float-right">
-            <a asp-action="Details" asp-controller="DeliveryNotes" asp-route-id=@ViewData["DeliveryNoteId"] class="btn btn-info float-right">Hoàn tất</a>
+            <a asp-action="Details" asp-route-id=@Model.DeliveryNoteId asp-controller="DeliveryNotes" class="btn btn-info float-right">Hoàn tất</a>
         </div>
     </div>
 </form>

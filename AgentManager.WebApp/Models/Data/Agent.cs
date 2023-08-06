@@ -19,8 +19,10 @@ namespace AgentManager.WebApp.Models.Data
         [Required]
         [StringLength(100)]
         [Display(Name = "SĐT")]
+        [DataType (DataType.PhoneNumber)]
         public string? Phone { get; set; }
         [Display(Name = "Ngày tiếp nhận")]
+        [DataType (DataType.DateTime)]
         public DateTime ReceptionDate { get; set; }
         [Display(Name = "Danh sách phiếu xuất")]
         public ICollection<DeliveryNote>? DeliveryNotes { get; set; }

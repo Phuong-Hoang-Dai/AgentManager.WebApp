@@ -37,6 +37,8 @@ namespace AgentManager.WebApp.Controllers
                 .Include(d => d.Agent)
                 .Include(d => d.Staff)
                 .FirstOrDefaultAsync(m => m.DeliveryNoteId == id);
+            deliveryNote.DeliveryNoteDetails = await _context.DeliveryNoteDetails.
+                Where(d => d.DeliveryNoteId.Equals(deliveryNote.DeliveryNoteId)).Include(d => d.Product).ToListAsync();
             if (deliveryNote == null)
             {
                 return NotFound();
@@ -79,13 +81,16 @@ namespace AgentManager.WebApp.Controllers
                 return NotFound();
             }
 
-            var deliveryNote = await _context.DeliveryNotes.FindAsync(id);
+            var deliveryNote = await _context.DeliveryNotes.FindAsync(id);;
+            deliveryNote.DeliveryNoteDetails = await _context.DeliveryNoteDetails.
+                Where(d => d.DeliveryNoteId.Equals(deliveryNote.DeliveryNoteId)).Include(d => d.Product).ToListAsync();
+
             if (deliveryNote == null)
             {
                 return NotFound();
             }
-            ViewData["AgentId"] = new SelectList(_context.Agents, "AgentId", "AgentId", deliveryNote.AgentId);
-            ViewData["StaffId"] = new SelectList(_context.Staffs, "Id", "Id", deliveryNote.StaffId);
+            ViewData["AgentId"] = new SelectList(_context.Agents, "AgentId", "AgentName");
+            ViewData["StaffId"] = new SelectList(_context.Staffs, "Id", "StaffName");
             return View(deliveryNote);
         }
 
@@ -121,8 +126,10 @@ namespace AgentManager.WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AgentId"] = new SelectList(_context.Agents, "AgentId", "AgentId", deliveryNote.AgentId);
-            ViewData["StaffId"] = new SelectList(_context.Staffs, "Id", "Id", deliveryNote.StaffId);
+            deliveryNote.DeliveryNoteDetails = await _context.DeliveryNoteDetails.
+                Where(d => d.DeliveryNoteId.Equals(deliveryNote.DeliveryNoteId)).Include(d => d.Product).ToListAsync();
+            ViewData["AgentId"] = new SelectList(_context.Agents, "AgentId", "AgentName");
+            ViewData["StaffId"] = new SelectList(_context.Staffs, "Id", "StaffName");
             return View(deliveryNote);
         }
 

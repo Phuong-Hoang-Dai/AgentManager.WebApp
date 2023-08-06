@@ -1,18 +1,26 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using AgentManager.WebApp.Models.Data;
 using System.ComponentModel.DataAnnotations;
 
-namespace AgentManager.WebApp.Models.Data
+namespace AgentManager.WebApp.Models.ViewModel
 {
-    public class Staff : IdentityUser
+    public class StaffVM
     {
         [Required]
+        [DataType(DataType.EmailAddress)]
+        public string? Email { get; set; }
+        [Required]
+        [DataType (DataType.Text)]
         [Display(Name = "Tên nhân viên")]
         public string? StaffName { get; set; }
         [Display(Name = "Giới tính")]
+        [Required]
+        [DataType (DataType.Text)]
         public string? Gender { get; set; }
         [Display(Name = "Ngày sinh")]
+        [Required]
         public DateTime DoB { get; set; }
         [Display(Name = "Địa chỉ")]
+        [Required]
         public string? Address { get; set; }
         [Display(Name = "Mã phòng ban")]
         public int DepartmentId { get; set; }
@@ -22,7 +30,5 @@ namespace AgentManager.WebApp.Models.Data
         public int PositionId { get; set; }
         [Display(Name = "Chức vụ")]
         public Position? Position { get; set; }
-        public ICollection<Receipt>? Receipts { get; set; }
-        public ICollection<DeliveryNote>? DeliveryNotes { get; set; }
     }
 }

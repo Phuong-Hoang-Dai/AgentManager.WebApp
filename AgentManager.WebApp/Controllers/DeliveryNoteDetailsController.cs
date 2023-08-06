@@ -7,10 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AgentManager.WebApp.Models.Data;
 using AgentManager.WebApp.Models.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AgentManager.WebApp.Controllers
 {
-    public class DeliveryNoteDetailsController : Controller
+    [Authorize(Roles = "Quản lý đại lý")]
+	public class DeliveryNoteDetailsController : Controller
     {
         private readonly AgentManagerDbContext _context;
 
@@ -18,34 +20,6 @@ namespace AgentManager.WebApp.Controllers
         {
             _context = context;
         }
-
-        // GET: DeliveryNoteDetails
-        public async Task<IActionResult> Index()
-        {
-            var agentManagerDbContext = _context.DeliveryNoteDetails.Include(d => d.DeliveryNote).Include(d => d.Product);
-            return View(await agentManagerDbContext.ToListAsync());
-        }
-
-        // GET: DeliveryNoteDetails/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.DeliveryNoteDetails == null)
-            {
-                return NotFound();
-            }
-
-            var deliveryNoteDetail = await _context.DeliveryNoteDetails
-                .Include(d => d.DeliveryNote)
-                .Include(d => d.Product)
-                .FirstOrDefaultAsync(m => m.ProductId == id);
-            if (deliveryNoteDetail == null)
-            {
-                return NotFound();
-            }
-
-            return View(deliveryNoteDetail);
-        }
-
         // GET: DeliveryNoteDetails/Create/
         public async Task<IActionResult> Create(int? id)
         {
@@ -72,12 +46,21 @@ namespace AgentManager.WebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(int id, AddDeliveryNoteDetail addDeliveryNoteDetail)
         {
+            Product product = _context.Products.Find(addDeliveryNoteDetail.ProductId);
+
             bool isAdded = _context.DeliveryNoteDetails
                             .Where(x => x.DeliveryNoteId.Equals(addDeliveryNoteDetail.DeliveryNoteId))
                             .Where(y => y.ProductId.Equals(addDeliveryNoteDetail.ProductId)).Any();
             if (isAdded)
             {
                 ModelState.AddModelError("ProductId", "Sản phẩm này đã được thêm");
+            }
+            if(addDeliveryNoteDetail.Quantity < 1)
+            {
+                ModelState.AddModelError("Quantity", "Số lượng tối thiểu phải là một");
+            }else if(addDeliveryNoteDetail.Quantity > product.InventoryQuantity)
+            {
+                ModelState.AddModelError("Quantity", "Số lượng vượt quá lượng hàng trong kho");
             }
             if (ModelState.IsValid)
             {
@@ -88,7 +71,6 @@ namespace AgentManager.WebApp.Controllers
                 deliveryNoteDetail.Quantity = addDeliveryNoteDetail.Quantity;
                 deliveryNoteDetail.DeliveryNoteId = addDeliveryNoteDetail.DeliveryNoteId;
 
-                Product product = _context.Products.Find(deliveryNoteDetail.ProductId);
                 product.InventoryQuantity -= deliveryNoteDetail.Quantity;
                 _context.Update(product);
 
@@ -109,79 +91,30 @@ namespace AgentManager.WebApp.Controllers
             return View(addDeliveryNoteDetail);
         }
 
-        // GET: DeliveryNoteDetails/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.DeliveryNoteDetails == null)
-            {
-                return NotFound();
-            }
-
-            var deliveryNoteDetail = await _context.DeliveryNoteDetails.FindAsync(id);
-            if (deliveryNoteDetail == null)
-            {
-                return NotFound();
-            }
-            ViewData["DeliveryNoteId"] = new SelectList(_context.DeliveryNotes, "DeliveryNoteId", "DeliveryNoteId", deliveryNoteDetail.DeliveryNoteId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductId", deliveryNoteDetail.ProductId);
-            return View(deliveryNoteDetail);
-        }
-
-        // POST: DeliveryNoteDetails/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Quantity,Price,ProductId,DeliveryNoteId")] DeliveryNoteDetail deliveryNoteDetail)
-        {
-            if (id != deliveryNoteDetail.ProductId)
-            {
-                return NotFound();
-            }
-
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(deliveryNoteDetail);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!DeliveryNoteDetailExists(deliveryNoteDetail.ProductId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["DeliveryNoteId"] = new SelectList(_context.DeliveryNotes, "DeliveryNoteId", "DeliveryNoteId", deliveryNoteDetail.DeliveryNoteId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductId", deliveryNoteDetail.ProductId);
-            return View(deliveryNoteDetail);
-        }
-
         // GET: DeliveryNoteDetails/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? productId, int? deliveryNoteId)
         {
-            if (id == null || _context.DeliveryNoteDetails == null)
+            if (productId == null || _context.DeliveryNoteDetails == null)
             {
                 return NotFound();
             }
-
-            var deliveryNoteDetail = await _context.DeliveryNoteDetails
-                .Include(d => d.DeliveryNote)
-                .Include(d => d.Product)
-                .FirstOrDefaultAsync(m => m.ProductId == id);
+            var deliveryNoteDetail = await _context.DeliveryNoteDetails.Where(m => m.ProductId == productId)
+                .Where(k => k.DeliveryNoteId == deliveryNoteId).FirstOrDefaultAsync();
             if (deliveryNoteDetail == null)
             {
                 return NotFound();
             }
+            _context.DeliveryNoteDetails.Remove(deliveryNoteDetail);
 
-            return View(deliveryNoteDetail);
+            var deliveryNote = await _context.DeliveryNotes.FindAsync(deliveryNoteId);
+
+            deliveryNote.TotalPrice -= deliveryNoteDetail.Price;
+
+            _context.Update(deliveryNote);
+
+            await _context.SaveChangesAsync();
+
+            return RedirectToAction("Edit","DeliveryNotes",new {id = deliveryNoteId });
         }
 
         // POST: DeliveryNoteDetails/Delete/5
