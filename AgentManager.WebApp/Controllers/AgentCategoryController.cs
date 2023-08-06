@@ -59,6 +59,12 @@ namespace AgentManager.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                if (agentCategory.MaxDebt < 1000000)
+                {
+                    ModelState.AddModelError("MaxDebt", "Nợ tối đa quá nhỏ");
+                    return View(agentCategory);
+                }
+
                 _context.Add(agentCategory);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -98,6 +104,11 @@ namespace AgentManager.WebApp.Controllers
             {
                 try
                 {
+                    if (agentCategory.MaxDebt < 1000000)
+                    {
+                        ModelState.AddModelError("MaxDebt", "Nợ tối đa quá nhỏ");
+                        return View(agentCategory);
+                    }
                     _context.Update(agentCategory);
                     await _context.SaveChangesAsync();
                 }
@@ -147,6 +158,14 @@ namespace AgentManager.WebApp.Controllers
             var agentCategory = await _context.AgentCategories.FindAsync(id);
             if (agentCategory != null)
             {
+                var agent = await _context.Agents.Where(m => m.AgentCategoryId
+                .Equals(agentCategory.AgentCategoryId)).FirstOrDefaultAsync();
+                if (agent != null)
+                {
+                    ModelState.AddModelError("AgentCategoryId", "Đã tồn tại đại lý thuộc loại này");
+                    return View(agentCategory);
+                }
+
                 _context.AgentCategories.Remove(agentCategory);
             }
             

@@ -48,8 +48,8 @@ namespace AgentManager.WebApp.Controllers
         // GET: Agent/Create
         public IActionResult Create()
         {
-            ViewData["AgentCategoryId"] = new SelectList(_context.AgentCategories, "AgentCategoryId", "AgentCategoryId");
-            ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictID", "DistrictID");
+            ViewData["AgentCategoryId"] = new SelectList(_context.AgentCategories, "AgentCategoryId", "MaxDebt");
+            ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictID", "DistrictName");
             return View();
         }
 
@@ -62,12 +62,13 @@ namespace AgentManager.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                agent.ReceptionDate = DateTime.Now;
                 _context.Add(agent);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AgentCategoryId"] = new SelectList(_context.AgentCategories, "AgentCategoryId", "AgentCategoryId", agent.AgentCategoryId);
-            ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictID", "DistrictID", agent.DistrictId);
+            ViewData["AgentCategoryId"] = new SelectList(_context.AgentCategories, "AgentCategoryId", "MaxDebt");
+            ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictID", "DistrictName");
             return View(agent);
         }
 
@@ -84,8 +85,8 @@ namespace AgentManager.WebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["AgentCategoryId"] = new SelectList(_context.AgentCategories, "AgentCategoryId", "AgentCategoryId", agent.AgentCategoryId);
-            ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictID", "DistrictID", agent.DistrictId);
+            ViewData["AgentCategoryId"] = new SelectList(_context.AgentCategories, "AgentCategoryId", "MaxDebt");
+            ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictID", "DistrictName");
             return View(agent);
         }
 
@@ -121,8 +122,8 @@ namespace AgentManager.WebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AgentCategoryId"] = new SelectList(_context.AgentCategories, "AgentCategoryId", "AgentCategoryId", agent.AgentCategoryId);
-            ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictID", "DistrictID", agent.DistrictId);
+            ViewData["AgentCategoryId"] = new SelectList(_context.AgentCategories, "AgentCategoryId", "MaxDebt");
+            ViewData["DistrictId"] = new SelectList(_context.Districts, "DistrictID", "DistrictName");
             return View(agent);
         }
 

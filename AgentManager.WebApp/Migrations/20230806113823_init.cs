@@ -94,9 +94,9 @@ namespace AgentManager.WebApp.Migrations
                 {
                     AgentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    AgentName = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    AgentName = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Address = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     ReceptionDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     DistrictId = table.Column<int>(type: "int", nullable: false),
                     AgentCategoryId = table.Column<int>(type: "int", nullable: false)
@@ -171,7 +171,7 @@ namespace AgentManager.WebApp.Migrations
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<int>(type: "int", nullable: false),
                     ProductWeight = table.Column<int>(type: "int", nullable: false),
-                    ItemUnit = table.Column<int>(type: "int", nullable: false),
+                    ItemUnit = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     InventoryQuantity = table.Column<int>(type: "int", nullable: false),
                     ProductCategoryId = table.Column<int>(type: "int", nullable: false)
                 },

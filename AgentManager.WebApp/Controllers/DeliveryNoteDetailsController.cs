@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AgentManager.WebApp.Models.Data;
+using AgentManager.WebApp.Models.ViewModel;
 
 namespace AgentManager.WebApp.Controllers
 {
@@ -45,12 +46,23 @@ namespace AgentManager.WebApp.Controllers
             return View(deliveryNoteDetail);
         }
 
-        // GET: DeliveryNoteDetails/Create
-        public IActionResult Create()
+        // GET: DeliveryNoteDetails/Create/
+        public async Task<IActionResult> Create(int? id)
         {
-            ViewData["DeliveryNoteId"] = new SelectList(_context.DeliveryNotes, "DeliveryNoteId", "DeliveryNoteId");
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductId");
-            return View();
+            if (id == null || _context.DeliveryNotes == null)
+            {
+                return NotFound();
+            }
+
+            var DeliveryNotes = await _context.DeliveryNotes.FindAsync(id);
+            if (DeliveryNotes == null)
+            {
+                return NotFound();
+            }
+            AddDeliveryNoteDetail addDeliveryNoteDetail = new AddDeliveryNoteDetail();
+            addDeliveryNoteDetail.DeliveryNoteId = DeliveryNotes.DeliveryNoteId;
+            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductName");
+            return View(addDeliveryNoteDetail);
         }
 
         // POST: DeliveryNoteDetails/Create
@@ -58,17 +70,43 @@ namespace AgentManager.WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Quantity,Price,ProductId,DeliveryNoteId")] DeliveryNoteDetail deliveryNoteDetail)
+        public async Task<IActionResult> Create(int id, AddDeliveryNoteDetail addDeliveryNoteDetail)
         {
+            bool isAdded = _context.DeliveryNoteDetails
+                            .Where(x => x.DeliveryNoteId.Equals(addDeliveryNoteDetail.DeliveryNoteId))
+                            .Where(y => y.ProductId.Equals(addDeliveryNoteDetail.ProductId)).Any();
+            if (isAdded)
+            {
+                ModelState.AddModelError("ProductId", "Sản phẩm này đã được thêm");
+            }
             if (ModelState.IsValid)
             {
+                
+
+                DeliveryNoteDetail deliveryNoteDetail = new DeliveryNoteDetail();
+                deliveryNoteDetail.ProductId = addDeliveryNoteDetail.ProductId;
+                deliveryNoteDetail.Quantity = addDeliveryNoteDetail.Quantity;
+                deliveryNoteDetail.DeliveryNoteId = addDeliveryNoteDetail.DeliveryNoteId;
+
+                Product product = _context.Products.Find(deliveryNoteDetail.ProductId);
+                product.InventoryQuantity -= deliveryNoteDetail.Quantity;
+                _context.Update(product);
+
+                deliveryNoteDetail.Price = product.Price * deliveryNoteDetail.Quantity;
                 _context.Add(deliveryNoteDetail);
+
+
+                DeliveryNote? deliveryNote = _context.Find<DeliveryNote>(deliveryNoteDetail.DeliveryNoteId);
+                deliveryNote.TotalPrice += deliveryNoteDetail.Price;
+                _context.Update(deliveryNote);
+
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Create", new { id = deliveryNote.DeliveryNoteId });
             }
-            ViewData["DeliveryNoteId"] = new SelectList(_context.DeliveryNotes, "DeliveryNoteId", "DeliveryNoteId", deliveryNoteDetail.DeliveryNoteId);
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductId", deliveryNoteDetail.ProductId);
-            return View(deliveryNoteDetail);
+
+            ViewData["DeliveryNoteId"] = addDeliveryNoteDetail.DeliveryNoteId; 
+            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductName", addDeliveryNoteDetail.ProductId);
+            return View(addDeliveryNoteDetail);
         }
 
         // GET: DeliveryNoteDetails/Edit/5

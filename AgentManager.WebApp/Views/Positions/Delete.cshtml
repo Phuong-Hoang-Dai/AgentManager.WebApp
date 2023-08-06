@@ -1,6 +1,42 @@
 ﻿@model AgentManager.WebApp.Models.Data.Position
 
 @{
+    ViewData["Title"] = "Quản lý quyền";
+    ViewData["Action"] = "Xóa quyền";
+    Layout = "~/Views/Shared/_mLayout.cshtml";
+}
+<div class="content">
+    <div class="row">
+        <div class="col">
+            <div class="card card-secondary">
+                <div class="card-header">
+                    <h3 class="card-title">Xóa quyền</h3>
+                </div>
+                <div class="card-body">
+                    <div class="">
+                        Xác nhận xóa role
+                        <b>@Html.DisplayFor(model => model.PositionName)</b>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <form asp-action="Delete">
+                <a asp-action="Index" class="btn btn-sm btn-secondary">Quay lại</a>
+                <input type="hidden" asp-for="PositionId" />
+                <input type="submit" value="Xóa" class="btn btn-sm btn-danger" />
+            </form>
+        </div>
+    </div>
+</div>
+
+
+@*
+@model AgentManager.WebApp.Models.Data.Position
+
+@{
     ViewData["Title"] = "Delete";
     Layout = "~/Views/Shared/_mLayout.cshtml";
 }
@@ -26,3 +62,4 @@
         <a asp-action="Index">Back to List</a>
     </form>
 </div>
+*@

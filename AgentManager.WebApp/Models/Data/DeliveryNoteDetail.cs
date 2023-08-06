@@ -1,4 +1,6 @@
-﻿namespace AgentManager.WebApp.Models.Data
+﻿using MessagePack;
+
+namespace AgentManager.WebApp.Models.Data
 {
     public class DeliveryNoteDetail
     {

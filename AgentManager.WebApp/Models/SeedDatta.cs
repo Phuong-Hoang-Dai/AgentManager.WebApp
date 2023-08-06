@@ -243,6 +243,99 @@ namespace AgentManager.WebApp.Models
                     }
                     context.SaveChanges();
                 }
+                if (!context.ProductCategories.Any())
+                {
+                    context.AddRange(
+                        new ProductCategory
+                        {
+                            ProductCategoryName = "Sữa tươi"
+                        },
+                        new ProductCategory
+                        {
+                            ProductCategoryName = "Kem"
+                        },
+                        new ProductCategory
+                        {
+                            ProductCategoryName = "Phô mai"
+                        }
+                    );
+                    context.SaveChanges();
+                }
+                if (!context.Products.Any())
+                {
+                    context.AddRange(
+                    new Product
+                    {
+                        ProductName = "Sữa tươi tách béo Vinamilk 100% Sữa Tươi",
+                        Image = "",
+                        Price = 10000,
+                        ProductWeight = 180,
+                        ItemUnit = "ml",
+                        InventoryQuantity = 10000,
+                        ProductCategoryId = 1
+                    },
+                    new Product
+                    {
+                        ProductName = "Sữa dinh dưỡng có đường Vinamilk A&D3",
+                        Image = "",
+                        Price = 7500,
+                        ProductWeight = 220,
+                        ItemUnit = "ml",
+                        InventoryQuantity = 10000,
+                        ProductCategoryId = 1
+                    },
+                    new Product
+                    {
+                        ProductName = "Sữa dinh dưỡng Vinamilk ADM Gold",
+                        Image = "",
+                        Price = 10000,
+                        ProductWeight = 180,
+                        ItemUnit = "ml",
+                        InventoryQuantity = 10000,
+                        ProductCategoryId = 1
+                    },
+                    new Product
+                    {
+                        ProductName = "Kem hộp trân châu đường đen Vinamilk",
+                        Image = "",
+                        Price = 67000,
+                        ProductWeight = 275,
+                        ItemUnit = "g",
+                        InventoryQuantity = 7000,
+                        ProductCategoryId = 2
+                    },
+                    new Product
+                    {
+                        ProductName = "Kem hộp trân châu hoàng kim phô mai Vinamilk",
+                        Image = "",
+                        Price = 67000,
+                        ProductWeight = 275,
+                        ItemUnit = "g",
+                        InventoryQuantity = 6000,
+                        ProductCategoryId = 2
+                    },
+                    new Product
+                    {
+                        ProductName = "Kem sầu riêng Vinamilk",
+                        Image = "",
+                        Price = 51000,
+                        ProductWeight = 247,
+                        ItemUnit = "g",
+                        InventoryQuantity = 5000,
+                        ProductCategoryId = 2
+                    },
+                    new Product
+                    {
+                        ProductName = "Phô mai Vinamilk",
+                        Image = "",
+                        Price = 29700,
+                        ProductWeight = 120,
+                        ItemUnit = "g",
+                        InventoryQuantity = 7500,
+                        ProductCategoryId = 3
+                    });
+                    context.SaveChanges();
+                }
             }
         }
     }

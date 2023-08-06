@@ -48,8 +48,8 @@ namespace AgentManager.WebApp.Controllers
         // GET: DeliveryNotes/Create
         public IActionResult Create()
         {
-            ViewData["AgentId"] = new SelectList(_context.Agents, "AgentId", "AgentId");
-            ViewData["StaffId"] = new SelectList(_context.Staffs, "Id", "Id");
+            ViewData["AgentId"] = new SelectList(_context.Agents, "AgentId", "AgentName");
+            ViewData["StaffId"] = new SelectList(_context.Staffs, "Id", "StaffName");
             return View();
         }
 
@@ -64,10 +64,10 @@ namespace AgentManager.WebApp.Controllers
             {
                 _context.Add(deliveryNote);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Create","DeliveryNoteDetails", new { id = deliveryNote.DeliveryNoteId });
             }
-            ViewData["AgentId"] = new SelectList(_context.Agents, "AgentId", "AgentId", deliveryNote.AgentId);
-            ViewData["StaffId"] = new SelectList(_context.Staffs, "Id", "Id", deliveryNote.StaffId);
+            ViewData["AgentId"] = new SelectList(_context.Agents, "AgentId", "AgentName");
+            ViewData["StaffId"] = new SelectList(_context.Staffs, "Id", "StaffName");
             return View(deliveryNote);
         }
 

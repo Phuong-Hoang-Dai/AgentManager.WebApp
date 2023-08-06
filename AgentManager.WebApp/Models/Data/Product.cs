@@ -7,7 +7,7 @@
         public string? Image { get; set; }
         public int Price { get; set; }
         public int ProductWeight { get; set; }
-        public int ItemUnit { get; set; }
+        public string ItemUnit { get; set; }
         public int InventoryQuantity { get; set; }
         public int ProductCategoryId { get; set; }
         public ProductCategory? ProductCategory { get; set; }

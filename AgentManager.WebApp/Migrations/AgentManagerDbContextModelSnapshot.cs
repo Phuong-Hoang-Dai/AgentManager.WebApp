@@ -31,19 +31,25 @@ namespace AgentManager.WebApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("AgentId"), 1L, 1);
 
                     b.Property<string>("Address")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("AgentCategoryId")
                         .HasColumnType("int");
 
                     b.Property<string>("AgentName")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<int>("DistrictId")
                         .HasColumnType("int");
 
                     b.Property<string>("Phone")
-                        .HasColumnType("nvarchar(max)");
+                        .IsRequired()
+                        .HasMaxLength(100)
+                        .HasColumnType("nvarchar(100)");
 
                     b.Property<DateTime>("ReceptionDate")
                         .HasColumnType("datetime2");
@@ -188,8 +194,9 @@ namespace AgentManager.WebApp.Migrations
                     b.Property<int>("InventoryQuantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("ItemUnit")
-                        .HasColumnType("int");
+                    b.Property<string>("ItemUnit")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("Price")
                         .HasColumnType("int");
