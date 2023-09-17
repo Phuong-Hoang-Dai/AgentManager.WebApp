@@ -1,5 +1,5 @@
-# **Để chạy project** cần copy bên dưới để cài đặt các công cụ EF và package trong Terminal (ở thẻ View) hoặc console (của Nuget ở thẻ Tools)
-## Dự án chạy bằng visual studio
+# Để chạy project cần copy bên dưới để cài đặt các công cụ EF và package trong Terminal (ở thẻ View) hoặc console (của Nuget ở thẻ Tools)
+## Đây là project AspNet Core 6.0 (chỉ chạy được trên vs 2022 có modify ASP.NET and Web development) 
 
 dotnet tool install --global dotnet-ef
 
