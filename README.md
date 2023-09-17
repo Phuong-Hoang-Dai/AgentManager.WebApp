@@ -1,4 +1,4 @@
-# Chỉ cần cài đặt công cụ EF và package bên dưới trong Terminal (ở thẻ View) hoặc console (của Nuget ở thẻ Tools)
+# **Để chạy project** cần copy bên dưới để cài đặt các công cụ EF và package trong Terminal (ở thẻ View) hoặc console (của Nuget ở thẻ Tools)
 ## Dự án chạy bằng visual studio
 
 dotnet tool install --global dotnet-ef
