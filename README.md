@@ -1,7 +1,7 @@
 # Để chạy project cần copy bên dưới để cài đặt các công cụ EF và package trong Terminal (View > Terminal) hoặc console (Tools > NuGet > Console)
 ## Đây là project AspNet Core 6.0 (chỉ chạy được trên vs *2022* có modify ASP.NET and Web development) 
 ## Lưu ý nếu lỗi có thể thử:
-- Bấm **Clear all NuGet Storage** để xóa hết package ( Tools > NuGet > Setting > General)
+- Bấm **Clear all NuGet Storage** để xóa hết package và chạy lại các câu lệnh bên dưới ( Tools > NuGet > Setting > General)
 - Check sql sever xem đã có AgentManagerDb chưa, nếu chưa hãy chạy lệnh này **dotnet ef database update**
 
 ## Copy dưới đây
