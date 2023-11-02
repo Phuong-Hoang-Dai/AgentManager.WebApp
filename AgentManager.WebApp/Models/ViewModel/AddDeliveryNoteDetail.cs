@@ -1,15 +1,11 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using AgentManager.WebApp.Models.Data;
+using System.ComponentModel.DataAnnotations;
 
 namespace AgentManager.WebApp.Models.ViewModel
 {
     public class AddDeliveryNoteDetail
     {
-        [Display(Name = "Mã phiếu xuất")]
-        public int DeliveryNoteId { get; set; }
-        [Display(Name = "Mã nhân viên")]
-        public int ProductId { get; set; }
-        [Display(Name = "Số lượng")]
-        [Required]
-        public int Quantity { get; set; }
+        public int deliveryNoteId {  get; set; }
+        public List<DeliveryNoteDetail> deliveryNoteDetails { get; set; } 
     }
 }

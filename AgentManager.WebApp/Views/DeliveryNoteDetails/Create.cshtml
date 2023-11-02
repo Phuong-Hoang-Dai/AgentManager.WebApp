@@ -1,81 +1,91 @@
 ﻿@model AgentManager.WebApp.Models.ViewModel.AddDeliveryNoteDetail
-
 @{
     ViewData["Title"] = "Thêm chi tiết đơn hàng";
     ViewData["Action"] = "Thêm chi tiết đơn hàng";
     Layout = "~/Views/Shared/_mLayout.cshtml";
 }
-<form asp-action="Create" class="content">
-    <div class="row">
-        <div class="col">
-            <div class="card card-secondary">
-                <div class="card-header">
-                    <h3 class="card-title">Thêm chi tiết đơn hàng</h3>
-                </div>
-                <div class="card-body">
-                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                    <div class="form-group">
-                        <label asp-for="ProductId" class="control-label"></label>
-                        <select asp-for="ProductId" class="form-control" asp-items="ViewBag.ProductId"></select>
-                        <span asp-validation-for="ProductId" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Quantity" class="control-label"></label>
-                        <input asp-for="Quantity" class="form-control" />
-                        <span asp-validation-for="Quantity" class="text-danger"></span>
-                    </div>
-                    <input type="hidden" asp-for="DeliveryNoteId" />
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-12">
-            <a asp-action="Index" asp-controller="DeliveryNotes" class="btn btn-secondary">Cancel</a>
-            <input type="submit" value="Thêm sản phẩm" class="btn btn-success float-right">
-            <a asp-action="Details" asp-route-id=@Model.DeliveryNoteId asp-controller="DeliveryNotes" class="btn btn-info float-right">Hoàn tất</a>
-        </div>
-    </div>
-</form>
-
-
-
-@*@model AgentManager.WebApp.Models.Data.DeliveryNoteDetail
-
-@{
-    ViewData["Title"] = "Create";
-    Layout = "~/Views/Shared/_mLayout.cshtml";
-}
-
-<h1>Create</h1>
-
-<h4>DeliveryNoteDetail</h4>
+<h4>Thêm chi tiết đơn hàng</h4>
 <hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="ProductId" class="control-label"></label>
-                <select asp-for="ProductId" class="form-control" asp-items="ViewBag.ProductId"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="Quantity" class="control-label"></label>
-                <input asp-for="Quantity" class="form-control" />
-                <span asp-validation-for="Quantity" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="container text-center">
+    <div class="card">
+        <div class="card-body p-0 my-3">
+            <form asp-action="Create" method="post">
+                <div id="editorRows" class="container">
+                    @foreach (var item in Model.deliveryNoteDetails)
+                    {
+                        <partial name="_AddItem" model="item" />
+                    }
+                </div>
+                <div class="mx-3 mb-3">
+                    <a id="addItem" class="btn btn-block btn-outline-success btn-xs text-center" asp-action="NewItem" asp-route-id="@Model.deliveryNoteId">+</a>
+                </div>
+                <input name="deliveryNoteId" asp-for="deliveryNoteId" type="hidden"/>
+                <div class="row mx-2">
+                    <div class="col-12 d-flex justify-content-between">
+                        <a asp-action="Index" class="btn btn-secondary">Quay lại</a>
+                        <input id="submit" type="submit" value="Tạo" class="btn btn-success float-right">
+                    </div>
+                </div>
+            </form>
+        </div>
     </div>
 </div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <script>
+        $("#submit").click(function (e) {
+            e.preventDefault();
+            var formData = new FormData();
+
+            $("select[name='ProductId']").each(function (i) {
+                var ingredientId = $(this).val();
+                formData.append("deliveryNoteDetails[" + i + "].ProductId", ingredientId);
+            });
+            $("input[name='Quantity']").each(function (i) {
+                var quantity = $(this).val();
+                formData.append("deliveryNoteDetails[" + i + "].Quantity", quantity);
+            });
+            $("input[name='DeliveryNoteId']").each(function (i) {
+                var DeliveryNoteId = $(this).val();
+                formData.append("deliveryNoteDetails[" + i + "].DeliveryNoteId", DeliveryNoteId);
+            });
+            $("input[name='deliveryNoteId']").each(function (i) {
+                var deliveryNoteId = $(this).val();
+                formData.append("deliveryNoteId", deliveryNoteId);
+            });
+
+            $.ajax({
+                method: 'POST',
+                url: "Create",
+                data: formData,
+                processData: false,
+                contentType: false,
+                success: function () {
+                }
+            });
+
+        });
+
+        $("#addItem").click(function () {
+            $.ajax({
+                url: this.href,
+                cache: false,
+                success: function (html) {
+                    $("#editorRows").append(html);
+                    $(".deleteRow").on("click", function () {
+                        $(this).parents("div.editorRow:first").remove();
+                        return false;
+                    });
+                }
+            });
+            return false;
+        });
+
+        $(".deleteRow").on("click", function () {
+            $(this).parents("div.editorRow:first").remove();
+            return false;
+        });
+    </script>
 }
-*@

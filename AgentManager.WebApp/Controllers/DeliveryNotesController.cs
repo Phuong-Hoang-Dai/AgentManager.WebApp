@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AgentManager.WebApp.Models.Data;
+using Microsoft.AspNetCore.Identity;
 
 namespace AgentManager.WebApp.Controllers
 {
@@ -51,7 +52,6 @@ namespace AgentManager.WebApp.Controllers
         public IActionResult Create()
         {
             ViewData["AgentId"] = new SelectList(_context.Agents, "AgentId", "AgentName");
-            ViewData["StaffId"] = new SelectList(_context.Staffs, "Id", "StaffName");
             return View();
         }
 
@@ -59,17 +59,15 @@ namespace AgentManager.WebApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("DeliveryNoteId,CreatedDate,TotalPrice,Payment,AgentId,StaffId")] DeliveryNote deliveryNote)
+        public async Task<IActionResult> Create(DeliveryNote deliveryNote)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(deliveryNote);
                 await _context.SaveChangesAsync();
-                return RedirectToAction("Create","DeliveryNoteDetails", new { id = deliveryNote.DeliveryNoteId });
+                return RedirectToAction("Create", "DeliveryNoteDetails", new { id = deliveryNote.DeliveryNoteId });
             }
             ViewData["AgentId"] = new SelectList(_context.Agents, "AgentId", "AgentName");
-            ViewData["StaffId"] = new SelectList(_context.Staffs, "Id", "StaffName");
             return View(deliveryNote);
         }
 

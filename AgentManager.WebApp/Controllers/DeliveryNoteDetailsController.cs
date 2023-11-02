@@ -33,8 +33,15 @@ namespace AgentManager.WebApp.Controllers
                 return NotFound();
             }
             AddDeliveryNoteDetail addDeliveryNoteDetail = new AddDeliveryNoteDetail();
-            addDeliveryNoteDetail.DeliveryNoteId = DeliveryNotes.DeliveryNoteId;
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductName");
+            addDeliveryNoteDetail.deliveryNoteDetails = new List<DeliveryNoteDetail>()
+            {
+                new DeliveryNoteDetail() {Quantity = 1, DeliveryNoteId = DeliveryNotes.DeliveryNoteId}
+            };
+
+            addDeliveryNoteDetail.deliveryNoteId = DeliveryNotes.DeliveryNoteId;
+            var products = new SelectList(_context.Products, "ProductId", "ProductName");
+            ViewBag.Products = products;
+
             return View(addDeliveryNoteDetail);
         }
 
@@ -42,51 +49,46 @@ namespace AgentManager.WebApp.Controllers
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(int id, AddDeliveryNoteDetail addDeliveryNoteDetail)
+        public async Task<IActionResult> Create(AddDeliveryNoteDetail addDeliveryNoteDetail)
         {
-            Product product = _context.Products.Find(addDeliveryNoteDetail.ProductId);
-
-            bool isAdded = _context.DeliveryNoteDetails
-                            .Where(x => x.DeliveryNoteId.Equals(addDeliveryNoteDetail.DeliveryNoteId))
-                            .Where(y => y.ProductId.Equals(addDeliveryNoteDetail.ProductId)).Any();
-            if (isAdded)
+            foreach(var item in addDeliveryNoteDetail.deliveryNoteDetails)
             {
-                ModelState.AddModelError("ProductId", "Sản phẩm này đã được thêm");
+                Product product = _context.Products.Find(item.ProductId);
+
+                if (item.Quantity < 1)
+                {
+                    ModelState.AddModelError("Quantity", "Số lượng tối thiểu phải là một");
+                }
+                else if (item.Quantity > product.InventoryQuantity)
+                {
+                    ModelState.AddModelError("Quantity", "Số lượng vượt quá lượng hàng trong kho");
+                }
+                if (ModelState.IsValid)
+                {
+                    DeliveryNoteDetail deliveryNoteDetail = new DeliveryNoteDetail();
+                    deliveryNoteDetail.ProductId = item.ProductId;
+                    deliveryNoteDetail.Quantity = item.Quantity;
+                    deliveryNoteDetail.DeliveryNoteId = item.DeliveryNoteId;
+
+                    product.InventoryQuantity -= deliveryNoteDetail.Quantity;
+                    _context.Update(product);
+
+                    deliveryNoteDetail.Price = product.Price * deliveryNoteDetail.Quantity;
+                    _context.Add(deliveryNoteDetail);
+
+
+                    DeliveryNote? deliveryNote = _context.Find<DeliveryNote>(deliveryNoteDetail.DeliveryNoteId);
+                    deliveryNote.TotalPrice += deliveryNoteDetail.Price;
+                    _context.Update(deliveryNote);
+
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction("Index", "DeliveryNotes", new { area = "" });
+                }
+
+                ViewData["DeliveryNoteId"] = item.DeliveryNoteId;
+                var products = new SelectList(_context.Products, "ProductId", "ProductName");
+                ViewBag.Products = products;
             }
-            if(addDeliveryNoteDetail.Quantity < 1)
-            {
-                ModelState.AddModelError("Quantity", "Số lượng tối thiểu phải là một");
-            }else if(addDeliveryNoteDetail.Quantity > product.InventoryQuantity)
-            {
-                ModelState.AddModelError("Quantity", "Số lượng vượt quá lượng hàng trong kho");
-            }
-            if (ModelState.IsValid)
-            {
-                
-
-                DeliveryNoteDetail deliveryNoteDetail = new DeliveryNoteDetail();
-                deliveryNoteDetail.ProductId = addDeliveryNoteDetail.ProductId;
-                deliveryNoteDetail.Quantity = addDeliveryNoteDetail.Quantity;
-                deliveryNoteDetail.DeliveryNoteId = addDeliveryNoteDetail.DeliveryNoteId;
-
-                product.InventoryQuantity -= deliveryNoteDetail.Quantity;
-                _context.Update(product);
-
-                deliveryNoteDetail.Price = product.Price * deliveryNoteDetail.Quantity;
-                _context.Add(deliveryNoteDetail);
-
-
-                DeliveryNote? deliveryNote = _context.Find<DeliveryNote>(deliveryNoteDetail.DeliveryNoteId);
-                deliveryNote.TotalPrice += deliveryNoteDetail.Price;
-                _context.Update(deliveryNote);
-
-                await _context.SaveChangesAsync();
-                return RedirectToAction("Create", new { id = deliveryNote.DeliveryNoteId });
-            }
-
-            ViewData["DeliveryNoteId"] = addDeliveryNoteDetail.DeliveryNoteId; 
-            ViewData["ProductId"] = new SelectList(_context.Products, "ProductId", "ProductName", addDeliveryNoteDetail.ProductId);
             return View(addDeliveryNoteDetail);
         }
 
@@ -138,6 +140,13 @@ namespace AgentManager.WebApp.Controllers
         private bool DeliveryNoteDetailExists(int id)
         {
           return (_context.DeliveryNoteDetails?.Any(e => e.ProductId == id)).GetValueOrDefault();
+        }
+        public IActionResult NewItem(int id)
+        {
+            var products = new SelectList(_context.Products, "ProductId", "ProductName");
+            ViewBag.Products = products;
+
+            return PartialView("_AddItem", new DeliveryNoteDetail() { DeliveryNoteId = id});
         }
     }
 }
