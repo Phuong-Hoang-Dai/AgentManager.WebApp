@@ -1,5 +1,6 @@
 ﻿using AgentManager.WebApp.Models.Data;
 using AgentManager.WebApp.Models.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -7,6 +8,7 @@ using System.Security;
 
 namespace AgentManager.WebApp.Controllers
 {
+    [Authorize (Roles = "Manager,Admin")]
     public class StaffController : Controller
     {
         private readonly AgentManagerDbContext _context;

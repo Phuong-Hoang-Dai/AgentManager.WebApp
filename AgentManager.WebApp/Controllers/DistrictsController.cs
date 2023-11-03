@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AgentManager.WebApp.Models.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AgentManager.WebApp.Controllers
 {
+    [Authorize (Roles = "Manager,Admin")]
     public class DistrictsController : Controller
     {
         private readonly AgentManagerDbContext _context;

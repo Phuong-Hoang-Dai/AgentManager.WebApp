@@ -1,5 +1,6 @@
 ﻿using AgentManager.WebApp.Models.Data;
 using AgentManager.WebApp.Models.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -8,6 +9,7 @@ using System.Data;
 
 namespace AgentManager.WebApp.Controllers
 {
+    [Authorize (Roles = "Manager,Admin")]
     public class RoleController : Controller
     {
         private readonly AgentManagerDbContext _context;

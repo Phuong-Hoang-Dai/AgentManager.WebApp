@@ -6,9 +6,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AgentManager.WebApp.Models.Data;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AgentManager.WebApp.Controllers
 {
+    [Authorize (Roles = "Manager,Admin,Staff")]
     public class ReceiptsController : Controller
     {
         private readonly AgentManagerDbContext _context;
@@ -72,6 +74,7 @@ namespace AgentManager.WebApp.Controllers
         }
 
         // GET: Receipts/Edit/5
+    [Authorize (Roles = "Manager,Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Receipts == null)
@@ -94,6 +97,7 @@ namespace AgentManager.WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+    [Authorize (Roles = "Manager,Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("ReceiptId,CreatedDate,Cash,StaffId,AgentId")] Receipt receipt)
         {
             if (id != receipt.ReceiptId)
@@ -127,6 +131,7 @@ namespace AgentManager.WebApp.Controllers
         }
 
         // GET: Receipts/Delete/5
+    [Authorize (Roles = "Manager,Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Receipts == null)
@@ -149,6 +154,7 @@ namespace AgentManager.WebApp.Controllers
         // POST: Receipts/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+    [Authorize (Roles = "Manager,Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Receipts == null)

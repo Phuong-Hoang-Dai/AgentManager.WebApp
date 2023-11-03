@@ -20,6 +20,8 @@ namespace AgentManager.WebApp.Models.Data
         public Department? Department { get; set; }
         [Display(Name = "Mã chức vụ")]
         public int PositionId { get; set; }
+        [Display(Name ="Số lượng đơn hàng đã tạo")]
+        public int OrderQuantity { get; set; }
         [Display(Name = "Chức vụ")]
         public Position? Position { get; set; }
         public ICollection<Receipt>? Receipts { get; set; }

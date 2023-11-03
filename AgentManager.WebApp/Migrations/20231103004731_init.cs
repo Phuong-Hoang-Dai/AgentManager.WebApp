@@ -28,7 +28,7 @@ namespace AgentManager.WebApp.Migrations
                 {
                     DepartmentId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DepartmentName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    DepartmentName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -41,7 +41,7 @@ namespace AgentManager.WebApp.Migrations
                 {
                     DistrictID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    DistrictName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    DistrictName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,7 +54,7 @@ namespace AgentManager.WebApp.Migrations
                 {
                     PositionId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    PositionName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    PositionName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -67,7 +67,7 @@ namespace AgentManager.WebApp.Migrations
                 {
                     ProductCategoryId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductCategoryName = table.Column<string>(type: "nvarchar(max)", nullable: true)
+                    ProductCategoryName = table.Column<string>(type: "nvarchar(max)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -123,12 +123,13 @@ namespace AgentManager.WebApp.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(type: "nvarchar(450)", nullable: false),
-                    StaffName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    StaffName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Gender = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DoB = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Address = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     DepartmentId = table.Column<int>(type: "int", nullable: false),
                     PositionId = table.Column<int>(type: "int", nullable: false),
+                    OrderQuantity = table.Column<int>(type: "int", nullable: false),
                     UserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     NormalizedUserName = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", maxLength: 256, nullable: true),
@@ -167,7 +168,7 @@ namespace AgentManager.WebApp.Migrations
                 {
                     ProductId = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    ProductName = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Image = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<int>(type: "int", nullable: false),
                     ProductWeight = table.Column<int>(type: "int", nullable: false),
@@ -217,7 +218,7 @@ namespace AgentManager.WebApp.Migrations
                     TotalPrice = table.Column<int>(type: "int", nullable: false),
                     Payment = table.Column<int>(type: "int", nullable: false),
                     AgentId = table.Column<int>(type: "int", nullable: false),
-                    StaffId = table.Column<string>(type: "nvarchar(450)", nullable: true)
+                    StaffId = table.Column<string>(type: "nvarchar(450)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -232,7 +233,8 @@ namespace AgentManager.WebApp.Migrations
                         name: "FK_DeliveryNotes_Users_StaffId",
                         column: x => x.StaffId,
                         principalTable: "Users",
-                        principalColumn: "Id");
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(

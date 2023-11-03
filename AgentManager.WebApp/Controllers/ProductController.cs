@@ -3,9 +3,11 @@ using Microsoft.AspNetCore.Mvc;
 using AgentManager.WebApp.Models;
 using AgentManager.WebApp.Models.Data;
 using AgentManager.WebApp.Models.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AgentManager.WebApp.Controllers
 {
+    [Authorize (Roles = "Manager,Admin,Staff")]
     public class ProductController : Controller
     {
         DBHelper dBHelper;
@@ -26,12 +28,14 @@ namespace AgentManager.WebApp.Controllers
             return View();
         }
 
+    [Authorize (Roles = "Manager,Admin")]
         public IActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
+    [Authorize (Roles = "Manager,Admin")]
         public IActionResult Create(SanPhamVM sanPhamVM)
         {
             if (ModelState.IsValid)
@@ -52,6 +56,7 @@ namespace AgentManager.WebApp.Controllers
             return View(sanPhamVM);
         }
 
+    [Authorize (Roles = "Manager,Admin")]
         public IActionResult Delete(int id)
         {
             SanPhamVM sanPhamVM = new SanPhamVM()
@@ -69,6 +74,7 @@ namespace AgentManager.WebApp.Controllers
             else return View(sanPhamVM);
         }
         [HttpPost]
+    [Authorize (Roles = "Manager,Admin")]
         public IActionResult Delete(SanPhamVM sanPhamVM)
         {
             if (ModelState.IsValid)
@@ -79,6 +85,7 @@ namespace AgentManager.WebApp.Controllers
             return View(sanPhamVM);
         }
 
+    [Authorize (Roles = "Manager,Admin")]
         public IActionResult Edit(int id)
         {
             SanPhamVM sanPhamVM = new SanPhamVM()
@@ -95,6 +102,7 @@ namespace AgentManager.WebApp.Controllers
             else return View(sanPhamVM);
         }
         [HttpPost]
+    [Authorize (Roles = "Manager,Admin")]
         public IActionResult Edit(SanPhamVM sanPhamVM)
         {
             if (ModelState.IsValid)

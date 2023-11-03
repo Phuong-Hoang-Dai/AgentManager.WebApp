@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AgentManager.WebApp.Migrations
 {
     [DbContext(typeof(AgentManagerDbContext))]
-    [Migration("20230806113823_init")]
+    [Migration("20231103004731_init")]
     partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -99,6 +99,7 @@ namespace AgentManager.WebApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("StaffId")
+                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("TotalPrice")
@@ -143,6 +144,7 @@ namespace AgentManager.WebApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DepartmentId"), 1L, 1);
 
                     b.Property<string>("DepartmentName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DepartmentId");
@@ -159,6 +161,7 @@ namespace AgentManager.WebApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("DistrictID"), 1L, 1);
 
                     b.Property<string>("DistrictName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("DistrictID");
@@ -175,6 +178,7 @@ namespace AgentManager.WebApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("PositionId"), 1L, 1);
 
                     b.Property<string>("PositionName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("PositionId");
@@ -207,6 +211,7 @@ namespace AgentManager.WebApp.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("ProductName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("ProductWeight")
@@ -228,6 +233,7 @@ namespace AgentManager.WebApp.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ProductCategoryId"), 1L, 1);
 
                     b.Property<string>("ProductCategoryName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("ProductCategoryId");
@@ -309,6 +315,9 @@ namespace AgentManager.WebApp.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("nvarchar(256)");
 
+                    b.Property<int>("OrderQuantity")
+                        .HasColumnType("int");
+
                     b.Property<string>("PasswordHash")
                         .HasColumnType("nvarchar(max)");
 
@@ -325,6 +334,7 @@ namespace AgentManager.WebApp.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("StaffName")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("TwoFactorEnabled")
@@ -513,7 +523,9 @@ namespace AgentManager.WebApp.Migrations
 
                     b.HasOne("AgentManager.WebApp.Models.Data.Staff", "Staff")
                         .WithMany("DeliveryNotes")
-                        .HasForeignKey("StaffId");
+                        .HasForeignKey("StaffId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Agent");
 

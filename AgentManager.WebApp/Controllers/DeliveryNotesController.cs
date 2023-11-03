@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using AgentManager.WebApp.Models.Data;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Authorization;
 
 namespace AgentManager.WebApp.Controllers
 {
+    [Authorize (Roles = "Manager,Admin,Staff")]
     public class DeliveryNotesController : Controller
     {
         private readonly AgentManagerDbContext _context;
@@ -63,6 +65,7 @@ namespace AgentManager.WebApp.Controllers
         {
             if (ModelState.IsValid)
             {
+                _context.Staffs.Find(deliveryNote.StaffId).OrderQuantity++;
                 _context.Add(deliveryNote);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Create", "DeliveryNoteDetails", new { id = deliveryNote.DeliveryNoteId });
@@ -72,6 +75,7 @@ namespace AgentManager.WebApp.Controllers
         }
 
         // GET: DeliveryNotes/Edit/5
+    [Authorize (Roles = "Manager,Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.DeliveryNotes == null)
@@ -97,6 +101,7 @@ namespace AgentManager.WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+    [Authorize (Roles = "Manager,Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("DeliveryNoteId,CreatedDate,TotalPrice,Payment,AgentId,StaffId")] DeliveryNote deliveryNote)
         {
             if (id != deliveryNote.DeliveryNoteId)
@@ -132,6 +137,7 @@ namespace AgentManager.WebApp.Controllers
         }
 
         // GET: DeliveryNotes/Delete/5
+    [Authorize (Roles = "Manager,Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.DeliveryNotes == null)
@@ -154,6 +160,7 @@ namespace AgentManager.WebApp.Controllers
         // POST: DeliveryNotes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+    [Authorize (Roles = "Manager,Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.DeliveryNotes == null)

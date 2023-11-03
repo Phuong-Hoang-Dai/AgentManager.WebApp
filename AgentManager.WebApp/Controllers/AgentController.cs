@@ -10,7 +10,8 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AgentManager.WebApp.Controllers
 {
-	public class AgentController : Controller
+    [Authorize (Roles = "Manager,Admin,Staff")]
+    public class AgentController : Controller
     {
         private readonly AgentManagerDbContext _context;
 
@@ -74,6 +75,7 @@ namespace AgentManager.WebApp.Controllers
         }
 
         // GET: Agent/Edit/5
+    [Authorize (Roles = "Manager,Admin")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null || _context.Agents == null)
@@ -96,6 +98,7 @@ namespace AgentManager.WebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+    [Authorize (Roles = "Manager,Admin")]
         public async Task<IActionResult> Edit(int id, [Bind("AgentId,AgentName,Address,Phone,ReceptionDate,DistrictId,AgentCategoryId")] Agent agent)
         {
             if (id != agent.AgentId)
@@ -129,6 +132,7 @@ namespace AgentManager.WebApp.Controllers
         }
 
         // GET: Agent/Delete/5
+    [Authorize (Roles = "Manager,Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.Agents == null)
@@ -151,6 +155,7 @@ namespace AgentManager.WebApp.Controllers
         // POST: Agent/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+    [Authorize (Roles = "Manager,Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Agents == null)
