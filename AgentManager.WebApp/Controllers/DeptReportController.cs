@@ -7,7 +7,6 @@ using System.Security.Principal;
 
 namespace AgentManager.WebApp.Controllers
 {
-    [Authorize(Roles = "Manager,Admin")]
 
     public class DeptReportController : Controller
     {

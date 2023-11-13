@@ -29,6 +29,8 @@ namespace AgentManager.WebApp.Models.Data
         [Display(Name = "Danh sách phiếu thu")]
         public ICollection<Receipt>? Receipts { get; set; }
         public int DistrictId { get; set; }
+        [Display(Name = "Nợ")]
+        public int Debt { get; set; }
         [Display(Name = "Quận")]
         public District? District { get; set; }
         public int AgentCategoryId { get; set; }
