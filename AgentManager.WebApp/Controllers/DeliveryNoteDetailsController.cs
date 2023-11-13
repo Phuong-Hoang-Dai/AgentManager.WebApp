@@ -69,6 +69,7 @@ namespace AgentManager.WebApp.Controllers
                     deliveryNoteDetail.ProductId = item.ProductId;
                     deliveryNoteDetail.Quantity = item.Quantity;
                     deliveryNoteDetail.DeliveryNoteId = item.DeliveryNoteId;
+                   
 
                     product.InventoryQuantity -= deliveryNoteDetail.Quantity;
                     _context.Update(product);

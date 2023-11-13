@@ -9,7 +9,7 @@ using System.Data;
 
 namespace AgentManager.WebApp.Controllers
 {
-    [Authorize (Roles = "Manager,Admin")]
+    [Authorize(Roles = "Manager,Admin")]
     public class RoleController : Controller
     {
         private readonly AgentManagerDbContext _context;

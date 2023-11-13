@@ -10,11 +10,10 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AgentManager.WebApp.Controllers
 {
-    [Authorize (Roles = "Manager,Admin,Staff")]
+    [Authorize(Roles = "Manager,Admin,Staff")]
     public class AgentController : Controller
     {
         private readonly AgentManagerDbContext _context;
-
         public AgentController(AgentManagerDbContext context)
         {
             _context = context;

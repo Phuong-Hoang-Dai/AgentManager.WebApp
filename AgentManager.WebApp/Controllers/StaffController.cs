@@ -8,7 +8,7 @@ using System.Security;
 
 namespace AgentManager.WebApp.Controllers
 {
-    [Authorize (Roles = "Manager,Admin")]
+    [Authorize(Roles = "Manager,Admin")]
     public class StaffController : Controller
     {
         private readonly AgentManagerDbContext _context;

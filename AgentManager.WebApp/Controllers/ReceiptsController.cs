@@ -10,7 +10,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AgentManager.WebApp.Controllers
 {
-    [Authorize (Roles = "Manager,Admin,Staff")]
+    [Authorize(Roles = "Manager,Admin,Staff")]
     public class ReceiptsController : Controller
     {
         private readonly AgentManagerDbContext _context;

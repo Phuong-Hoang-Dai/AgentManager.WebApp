@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace AgentManager.WebApp.Controllers
 {
-    [Authorize (Roles = "Manager,Admin,Staff")]
+    [Authorize(Roles = "Manager,Admin,Staff")]
     public class DeliveryNotesController : Controller
     {
         private readonly AgentManagerDbContext _context;
@@ -67,6 +67,7 @@ namespace AgentManager.WebApp.Controllers
             {
                 _context.Staffs.Find(deliveryNote.StaffId).OrderQuantity++;
                 _context.Add(deliveryNote);
+                deliveryNote.CreatedDate = DateTime.Now;
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Create", "DeliveryNoteDetails", new { id = deliveryNote.DeliveryNoteId });
             }
@@ -137,7 +138,7 @@ namespace AgentManager.WebApp.Controllers
         }
 
         // GET: DeliveryNotes/Delete/5
-    [Authorize (Roles = "Manager,Admin")]
+   // [Authorize (Roles = "Manager,Admin")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null || _context.DeliveryNotes == null)
@@ -160,7 +161,7 @@ namespace AgentManager.WebApp.Controllers
         // POST: DeliveryNotes/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-    [Authorize (Roles = "Manager,Admin")]
+    //[Authorize (Roles = "Manager,Admin")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.DeliveryNotes == null)

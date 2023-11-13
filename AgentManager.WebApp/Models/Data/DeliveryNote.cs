@@ -6,6 +6,7 @@ namespace AgentManager.WebApp.Models.Data
     {
         [Display(Name ="Mã đại lý")]
         public int DeliveryNoteId { get; set; }
+       
         [Display(Name ="Ngày tạo phiếu")]
         public DateTime CreatedDate { get; set; }
         [Display(Name ="Tổng tiền")]
